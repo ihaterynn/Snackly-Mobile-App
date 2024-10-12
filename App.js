@@ -16,14 +16,14 @@ export default function App() {
         <Stack.Screen
           name="BottomNavbar"
           component={BottomNavbar}
-          options={{ headerShown: false }} // Hide header for bottom navigation
+          options={{ headerShown: false }} // Hide header
         />
         
         {/* Add MealLogScreen in the stack for button navigation */}
         <Stack.Screen
           name="MealLogScreen"
           component={MealLogScreen}
-          options={{ title: 'Logs' }} // Customize header if necessary
+          options={{ title: 'Logs' }} 
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -11,25 +11,25 @@ const BottomNavbar = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        headerShown: false, // Hide the header if you don't need it
+        headerShown: false, // Hide the header 
         tabBarStyle: {
           backgroundColor: '#fff', // Set background color for the tab bar
-          height: 70, // Set the height of the tab bar
-          paddingBottom: 5, // Add padding to the bottom for better spacing
+          height: 70, 
+          paddingBottom: 5, 
         },
         tabBarLabelStyle: {
-          fontSize: 13, // Set label font size
-          width: 100, // Set width of each label item
+          fontSize: 13, 
+          width: 100, 
         },
         tabBarItemStyle: {
-          width: 100, // Set width of each tab item
+          width: 100, 
           paddingBottom: 6, // Add padding to separate icons and labels
         },
         tabBarIconStyle: {
-          marginTop: 12, // Move the icons down slightly
+          marginTop: 12, 
         },
         tabBarActiveTintColor: '#59CE8F', // Active color (when pressed)
-        tabBarInactiveTintColor: '#7A7A7A', // Inactive color (default state)
+        tabBarInactiveTintColor: '#7A7A7A', 
       }}>
       <Tab.Screen 
         name="Home" 
@@ -37,7 +37,7 @@ const BottomNavbar = () => {
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
-            <Icon name="home" color={color} size={size + 6} /> // Keep icon size unchanged
+            <Icon name="home" color={color} size={size + 6} />
           ),
         }} 
       />
@@ -47,7 +47,7 @@ const BottomNavbar = () => {
         options={{
           tabBarLabel: 'Scan',
           tabBarIcon: ({ color, size }) => (
-            <Icon name="camera-alt" color={color} size={size + 6} /> // Keep icon size unchanged
+            <Icon name="camera-alt" color={color} size={size + 6} /> 
           ),
         }} 
       />
@@ -55,9 +55,9 @@ const BottomNavbar = () => {
         name="Profile" 
         component={ProfileScreen} 
         options={{
-          tabBarLabel: 'Profile', // Ensure full label is displayed
+          tabBarLabel: 'Profile', 
           tabBarIcon: ({ color, size }) => (
-            <Icon name="person" color={color} size={size + 6} /> // Keep icon size unchanged
+            <Icon name="person" color={color} size={size + 6} /> 
           ),
         }} 
       />

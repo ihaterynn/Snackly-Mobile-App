@@ -1,9 +1,8 @@
-// MealLogScreen.js
 import React from 'react';
 import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
 
 const MealLogScreen = ({ route }) => {
-  const { logs } = route.params; // Get the logs from navigation params
+  const { logs } = route.params; 
 
   return (
     <View style={styles.container}>

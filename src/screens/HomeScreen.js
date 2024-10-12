@@ -28,12 +28,12 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#CDFADB', // New background color
+    backgroundColor: '#CDFADB', 
     alignItems: 'center',
     justifyContent: 'center',
   },
   logo: {
-    width: 150,  // Adjust the logo size
+    width: 150,  
     height: 150,
     marginBottom: 20,  // Space between the logo and title
   },
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#3C3F4D',
     padding: 15,
     borderRadius: 10,
-    width: 120,  // Set Button Width
+    width: 120,  
     marginTop: 20,
   },
   buttonText: {
