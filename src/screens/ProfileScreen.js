@@ -74,7 +74,7 @@ const Profile = () => {
             {profileImage ? (
               <Image source={{ uri: profileImage }} style={styles.profileImage} />
             ) : (
-              <Image source={require('../../assets/bread.png')} style={styles.profileImage} />
+              <Image source={require('../../assets/pfpcar.jpg')} style={styles.profileImage} />
             )}
           </TouchableOpacity>
 
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   },
   topSection: {
     backgroundColor: '#DAF5FF',
-    paddingVertical: 30,
+    paddingVertical: 40,
     paddingHorizontal: 20,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
@@ -185,11 +185,12 @@ const styles = StyleSheet.create({
   },
   inputSection: {
     padding: 20,
+    marginTop: 30
   },
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 50,
   },
   inputLabel: {
     fontSize: 18,
@@ -213,11 +214,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   activeGoalButton: {
-    backgroundColor: '#3C3F4D',
-    borderColor: '#3C3F4D',
+    backgroundColor: '#59CE8F',
+    borderColor: '#59CE8F',
   },
   goalButtonText: {
-    color: '#fff',
+    color: '#3C3F4D',
     fontSize: 16,
   },
   saveButton: {
@@ -225,6 +226,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     margin: 20,
+    marginTop: 30,
     alignItems: 'center',
   },
   saveButtonText: {
