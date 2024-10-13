@@ -10,17 +10,17 @@ const Profile = () => {
   const [calories, setCalories] = useState(1999);  // Calculated calorie goal
   const [profileImage, setProfileImage] = useState(null); // Profile image URI
 
-  // Harris-Benedict Equation for Calorie Intake Calculation
-  const calculateCalories = () => {
-    let bmr = 10 * weight + 6.25 * height - 5 * 25 + 5; // Assuming age 25 and male
-    if (goal === 'bulk') {
-      setCalories(bmr * 1.2 + 500); // Add extra for bulking
-    } else if (goal === 'cut') {
-      setCalories(bmr * 1.2 - 500); // Subtract for cutting
-    } else {
-      setCalories(bmr * 1.2); // Maintain calories
-    }
-  };
+  // Harris-Benedict Equation for Calorie Intake Calculation (without age)
+const calculateCalories = () => {
+  let bmr = 10 * weight + 6.25 * height + 5; 
+  if (goal === 'bulk') {
+    setCalories(bmr * 1.2 + 500); // Add extra for bulking
+  } else if (goal === 'cut') {
+    setCalories(bmr * 1.2 - 500); // Subtract for cutting
+  } else {
+    setCalories(bmr * 1.2); // Maintain calories
+  }
+};
 
   // Update the calories whenever weight, height, or goal changes
   React.useEffect(() => {
@@ -144,7 +144,7 @@ const Profile = () => {
 
       {/* Save Button */}
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveButtonText}>Save and Update Calorie Goal</Text>
+        <Text style={styles.saveButtonText}>Save & Update Calorie Goal</Text>
       </TouchableOpacity>
     </ScrollView>
   );
@@ -225,9 +225,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#3C3F4D',
     padding: 15,
     borderRadius: 10,
-    margin: 20,
+    margin: 50,
     marginTop: 30,
     alignItems: 'center',
+    width: 300, 
   },
   saveButtonText: {
     color: '#fff',
