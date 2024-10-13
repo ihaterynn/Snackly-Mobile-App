@@ -38,7 +38,7 @@ const ScanScreen = () => {
     }, [])
   );
 
-  const progress = (caloriesEaten / totalCalories) * 100;
+  const progress = Math.min((caloriesEaten / totalCalories) * 100, 100); // Cap the progress at 100%
 
   async function requestPermissions() {
     try {
@@ -60,6 +60,7 @@ const ScanScreen = () => {
     }
   }
 
+
   const getProgressColor = (progress) => {
     if (progress <= 50) {
       const red = 255;
@@ -71,7 +72,7 @@ const ScanScreen = () => {
       return `rgb(${red},${green},0)`; 
     }
   };
-
+  
   const handleImageSelection = (response) => {
     if (!response.didCancel && !response.errorMessage && response.assets && response.assets[0]) {
       const { uri } = response.assets[0]; 
