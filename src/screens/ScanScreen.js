@@ -11,6 +11,7 @@ const ScanScreen = () => {
   const [protein, setProtein] = useState(0); 
   const [fats, setFats] = useState(0); 
   const [caloriesEaten, setCaloriesEaten] = useState(0); 
+  const [predictedFood, setPredictedFood] = useState(''); 
   const [loading, setLoading] = useState(false); 
   const [logs, setLogs] = useState([]); 
 
@@ -57,7 +58,6 @@ const ScanScreen = () => {
   const handleImageSelection = (response) => {
     if (!response.didCancel && !response.errorMessage && response.assets && response.assets[0]) {
       const { uri } = response.assets[0]; 
-      setLogs([...logs, uri]); 
       inferImage(uri);
     }
   };
@@ -92,6 +92,17 @@ const ScanScreen = () => {
         setCarbs(nutrition.carbs);
         setProtein(nutrition.protein);
         setFats(nutrition.fat);
+        setPredictedFood(result['Predicted Food']);
+        
+        // Add to logs
+        setLogs([...logs, {
+          imageUri: imgUri,
+          predictedFood: result['Predicted Food'], 
+          calories: nutrition.calories,
+          carbs: nutrition.carbs,
+          protein: nutrition.protein,
+          fats: nutrition.fat
+        }]);
       } else {
         Alert.alert('Error', 'Could not retrieve nutrition information.');
       }
@@ -214,13 +225,13 @@ const styles = StyleSheet.create({
   nutrientRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15, // Adjusting the spacing between rows
-    marginLeft: -20,  // Adjusting horizontal spacing
+    marginBottom: 15, 
+    marginLeft: -20,
   },
   icon: {
     width: 40,
     height: 45,
-    marginRight: 15,  // Adjust the spacing between the icon and the nutrition value
+    marginRight: 15,
   },
   nutrientValue: {
     fontSize: 18,
