@@ -19,14 +19,12 @@ const BottomNavbar = () => {
         },
         tabBarLabelStyle: {
           fontSize: 13, 
-          width: 100, 
         },
         tabBarItemStyle: {
-          width: 100, 
           paddingBottom: 6, // Add padding to separate icons and labels
         },
         tabBarIconStyle: {
-          marginTop: 12, 
+          marginTop: 5, 
         },
         tabBarActiveTintColor: '#59CE8F', // Active color (when pressed)
         tabBarInactiveTintColor: '#7A7A7A', 
