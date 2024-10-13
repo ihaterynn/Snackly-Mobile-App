@@ -13,7 +13,7 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       {/* Adding the logo */}
-      <Image source={require('../../assets/NutriAIDLogo.png')} style={styles.logo} />
+      <Image source={require('../../assets/SnacklyLogo.png')} style={styles.logo} />
 
       <Text style={styles.title}>Snackly</Text>
       <Text style={styles.subtitle}>Calorie & Nutrition Tracker</Text>
@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   logo: {
-    width: 150,  
-    height: 150,
+    width: 180,  
+    height: 160,
     marginBottom: 20,  // Space between the logo and title
   },
   title: {
