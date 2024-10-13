@@ -80,7 +80,7 @@ const Profile = () => {
 
           <View style={styles.profileDetails}>
             <Text style={styles.profileName}>rynn</Text>
-            <Text style={styles.caloriesText}>{calories.toFixed(0)} Cal / d</Text>
+            <Text style={styles.caloriesText}>{calories.toFixed(0)} Cal / daily</Text>
           </View>
         </View>
       </View>

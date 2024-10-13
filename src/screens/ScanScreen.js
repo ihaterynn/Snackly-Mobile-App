@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, Image } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Svg, { Circle } from 'react-native-svg';
 import RNFS from 'react-native-fs'; 
 import { PermissionsAndroid, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';  // Import AsyncStorage
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
 const ScanScreen = () => {
   const [carbs, setCarbs] = useState(0); 
@@ -16,28 +16,27 @@ const ScanScreen = () => {
   const [loading, setLoading] = useState(false); 
   const [logs, setLogs] = useState([]); 
   const [totalCalories, setTotalCalories] = useState(2000);  // Default to 2000
-  const [isCaloriesLoaded, setIsCaloriesLoaded] = useState(false);  // Add state for loading
 
   const navigation = useNavigation(); // For navigation
 
-  // Get stored daily calories from AsyncStorage
+  // Fetch updated daily calories from AsyncStorage when screen gains focus
   const fetchDailyCalories = async () => {
     try {
       const storedCalories = await AsyncStorage.getItem('dailyCalories');
       if (storedCalories !== null) {
         setTotalCalories(parseFloat(storedCalories));  // Update state with stored calories
       }
-      setIsCaloriesLoaded(true);  // Set loading state to true once it's done fetching
     } catch (error) {
       console.error("Error fetching daily calories: ", error);
-      setIsCaloriesLoaded(true);  // Even on error, stop loading
     }
   };
 
-  useEffect(() => {
-    fetchDailyCalories(); // Fetch calories when component mounts
-    requestPermissions();
-  }, []);
+  // Use useFocusEffect to fetch updated calories whenever the screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      fetchDailyCalories();
+    }, [])
+  );
 
   const progress = (caloriesEaten / totalCalories) * 100;
 
@@ -136,10 +135,6 @@ const ScanScreen = () => {
   const handleLogsNavigation = () => {
     navigation.navigate('MealLogScreen', { logs });
   };
-
-  if (!isCaloriesLoaded) {
-    return <ActivityIndicator size="large" color="#0000ff" />;  // Show loader while fetching data
-  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
