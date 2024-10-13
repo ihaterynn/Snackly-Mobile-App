@@ -91,7 +91,7 @@ const ScanScreen = () => {
     try {
       setLoading(true); 
       const imageData = await RNFS.readFile(imgUri, 'base64');
-
+  
       const response = await fetch('http://192.168.0.5:5000/infer', {
         method: 'POST',
         headers: {
@@ -101,14 +101,16 @@ const ScanScreen = () => {
           image: imageData,
         }),
       });
-
+  
       const result = await response.json();
       if (result && result['Estimated Nutrition Info']) {
         const nutrition = result['Estimated Nutrition Info'];
-        setCaloriesEaten(nutrition.calories);
-        setCarbs(nutrition.carbs);
-        setProtein(nutrition.protein);
-        setFats(nutrition.fat);
+        
+        // Accumulate the nutrition values
+        setCaloriesEaten(prevCalories => prevCalories + nutrition.calories);
+        setCarbs(prevCarbs => prevCarbs + nutrition.carbs);
+        setProtein(prevProtein => prevProtein + nutrition.protein);
+        setFats(prevFats => prevFats + nutrition.fat);
         setPredictedFood(result['Predicted Food']);
         
         // Add to logs
@@ -130,7 +132,7 @@ const ScanScreen = () => {
       setLoading(false);
     }
   };
-
+  
   // Navigation to MealLogScreen
   const handleLogsNavigation = () => {
     navigation.navigate('MealLogScreen', { logs });
