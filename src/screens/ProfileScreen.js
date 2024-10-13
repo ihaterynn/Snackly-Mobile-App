@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Alert } from 'react-native';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
-import Svg, { Circle } from 'react-native-svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';  // Import AsyncStorage
 
 const Profile = () => {
   const [weight, setWeight] = useState(50);  // User's weight in kg
@@ -27,6 +27,16 @@ const Profile = () => {
     calculateCalories();
   }, [weight, height, goal]);
 
+  // Save calories to AsyncStorage (so that ScanScreen can access the updated value)
+  const saveCaloriesToStorage = async () => {
+    try {
+      await AsyncStorage.setItem('dailyCalories', JSON.stringify(calories));
+      Alert.alert('Success', 'Your changes have been saved and calorie goal updated!');
+    } catch (error) {
+      console.error("Error saving calorie data: ", error);
+    }
+  };
+
   // Function to handle image selection
   const handleImagePicker = () => {
     launchImageLibrary({ mediaType: 'photo' }, (response) => {
@@ -49,8 +59,9 @@ const Profile = () => {
     });
   };
 
+  // Handle Save Button (store calories and alert success)
   const handleSave = () => {
-    Alert.alert('Success', 'Your changes have been saved and calorie goal updated!');
+    saveCaloriesToStorage();
   };
 
   return (

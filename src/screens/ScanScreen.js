@@ -4,7 +4,8 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import Svg, { Circle } from 'react-native-svg';
 import RNFS from 'react-native-fs'; 
 import { PermissionsAndroid, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native'; 
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';  // Import AsyncStorage
 
 const ScanScreen = () => {
   const [carbs, setCarbs] = useState(0); 
@@ -14,9 +15,30 @@ const ScanScreen = () => {
   const [predictedFood, setPredictedFood] = useState(''); 
   const [loading, setLoading] = useState(false); 
   const [logs, setLogs] = useState([]); 
+  const [totalCalories, setTotalCalories] = useState(2000);  // Default to 2000
+  const [isCaloriesLoaded, setIsCaloriesLoaded] = useState(false);  // Add state for loading
 
-  const navigation = useNavigation(); 
-  const totalCalories = 2000; 
+  const navigation = useNavigation(); // For navigation
+
+  // Get stored daily calories from AsyncStorage
+  const fetchDailyCalories = async () => {
+    try {
+      const storedCalories = await AsyncStorage.getItem('dailyCalories');
+      if (storedCalories !== null) {
+        setTotalCalories(parseFloat(storedCalories));  // Update state with stored calories
+      }
+      setIsCaloriesLoaded(true);  // Set loading state to true once it's done fetching
+    } catch (error) {
+      console.error("Error fetching daily calories: ", error);
+      setIsCaloriesLoaded(true);  // Even on error, stop loading
+    }
+  };
+
+  useEffect(() => {
+    fetchDailyCalories(); // Fetch calories when component mounts
+    requestPermissions();
+  }, []);
+
   const progress = (caloriesEaten / totalCalories) * 100;
 
   async function requestPermissions() {
@@ -38,10 +60,6 @@ const ScanScreen = () => {
       console.warn(err);
     }
   }
-
-  useEffect(() => {
-    requestPermissions();
-  }, []);
 
   const getProgressColor = (progress) => {
     if (progress <= 50) {
@@ -114,9 +132,14 @@ const ScanScreen = () => {
     }
   };
 
+  // Navigation to MealLogScreen
   const handleLogsNavigation = () => {
     navigation.navigate('MealLogScreen', { logs });
   };
+
+  if (!isCaloriesLoaded) {
+    return <ActivityIndicator size="large" color="#0000ff" />;  // Show loader while fetching data
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -173,6 +196,7 @@ const ScanScreen = () => {
           <Text style={styles.buttonText}>Snap a photo</Text>
         </TouchableOpacity>
 
+        {/* Navigate to MealLogScreen */}
         <TouchableOpacity style={styles.logsButton} onPress={handleLogsNavigation}>
           <Text style={styles.buttonText}>View Logs</Text>
         </TouchableOpacity>
