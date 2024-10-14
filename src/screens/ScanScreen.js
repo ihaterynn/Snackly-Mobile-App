@@ -85,25 +85,39 @@ const ScanScreen = () => {
   };
 
   const handleCamera = () => {
-    launchCamera({ mediaType: 'photo' }, handleImageSelection);
+    console.log('Launching Camera...');
+    launchCamera({ mediaType: 'photo' }, (response) => {
+      console.log('Camera Response: ', response);
+      
+      if (!response.didCancel && !response.errorMessage && response.assets && response.assets[0]) {
+        const { uri } = response.assets[0]; 
+        inferImage(uri); // Call the inferImage function with the captured image URI
+      } else {
+        console.error('Camera error: ', response.errorMessage || 'User cancelled image capture');
+      }
+    });
   };
+  
 
   const inferImage = async (imgUri) => {
     try {
       setLoading(true); 
-      const imageData = await RNFS.readFile(imgUri, 'base64');
-  
-      const response = await fetch('http://192.168.0.5:5000/infer', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          image: imageData,
-        }),
+      const formData = new FormData();
+      formData.append('image', {
+        uri: imgUri,
+        type: 'image/jpeg',
+        name: 'food_image.jpg',
       });
   
+      console.log('Sending image for inference...');
+      const response = await fetch('http://192.168.0.5:5000/infer', {
+        method: 'POST',
+        body: formData,
+      });
+
       const result = await response.json();
+      console.log('Inference Result:', result); // Log the result from the server
+      
       if (result && result['Estimated Nutrition Info']) {
         const nutrition = result['Estimated Nutrition Info'];
         
@@ -112,27 +126,29 @@ const ScanScreen = () => {
         setCarbs(prevCarbs => prevCarbs + nutrition.carbs);
         setProtein(prevProtein => prevProtein + nutrition.protein);
         setFats(prevFats => prevFats + nutrition.fat);
-        setPredictedFood(result['Predicted Food']);
+        setPredictedFood(result['Predicted Food']); // This will now be properly formatted as 'Roti Canai' or 'Nasi Lemak'
         
         // Add to logs
         setLogs([...logs, {
           imageUri: imgUri,
-          predictedFood: result['Predicted Food'], 
+          predictedFood: result['Predicted Food'],  // Displaying properly formatted food name
           calories: nutrition.calories,
           carbs: nutrition.carbs,
           protein: nutrition.protein,
           fats: nutrition.fat
         }]);
       } else {
+        console.error('Error: Could not retrieve nutrition information.');
         Alert.alert('Error', 'Could not retrieve nutrition information.');
       }
     } catch (error) {
-      console.error('Error: ', error);
+      console.error('Error during inference: ', error);
       Alert.alert('Error', 'Failed to send image to the server.');
     } finally {
       setLoading(false);
     }
   };
+
   
   // Navigation to MealLogScreen
   const handleLogsNavigation = () => {
