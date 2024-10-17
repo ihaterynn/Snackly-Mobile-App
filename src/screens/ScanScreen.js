@@ -108,38 +108,60 @@ const ScanScreen = () => {
         type: 'image/jpeg',
         name: 'food_image.jpg',
       });
-  
-      console.log('Sending image for inference...');
-      const response = await fetch('http://192.168.0.5:5000/infer', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const result = await response.json();
-      console.log('Inference Result:', result); // Log the result from the server
       
-      if (result && result['Estimated Nutrition Info']) {
-        const nutrition = result['Estimated Nutrition Info'];
-        
-        // Accumulate the nutrition values
-        setCaloriesEaten(prevCalories => prevCalories + nutrition.calories);
-        setCarbs(prevCarbs => prevCarbs + nutrition.carbs);
-        setProtein(prevProtein => prevProtein + nutrition.protein);
-        setFats(prevFats => prevFats + nutrition.fat);
-        setPredictedFood(result['Predicted Food']); // This will now be properly formatted as 'Roti Canai' or 'Nasi Lemak'
-        
-        // Add to logs
-        setLogs([...logs, {
-          imageUri: imgUri,
-          predictedFood: result['Predicted Food'],  // Displaying properly formatted food name
-          calories: nutrition.calories,
-          carbs: nutrition.carbs,
-          protein: nutrition.protein,
-          fats: nutrition.fat
-        }]);
+      const urls = [
+        'http://192.168.0.5:5000/infer',
+        'http://172.18.74.133:5000/infer'
+      ];
+  
+      let response = null;
+      for (const url of urls) {
+        try {
+          console.log(`Attempting to fetch from ${url}...`);
+          response = await fetch(url, {
+            method: 'POST',
+            body: formData,
+          });
+  
+          if (response.ok) {
+            break; // If the fetch was successful, break out of the loop
+          } else {
+            console.error(`Error fetching from ${url}: `, response.status);
+          }
+        } catch (error) {
+          console.error(`Error attempting to fetch from ${url}:`, error);
+        }
+      }
+  
+      if (response && response.ok) {
+        const result = await response.json();
+        console.log('Inference Result:', result);
+  
+        if (result && result['Estimated Nutrition Info']) {
+          const nutrition = result['Estimated Nutrition Info'];
+  
+          // Accumulate the nutrition values
+          setCaloriesEaten(prevCalories => prevCalories + nutrition.calories);
+          setCarbs(prevCarbs => prevCarbs + nutrition.carbs);
+          setProtein(prevProtein => prevProtein + nutrition.protein);
+          setFats(prevFats => prevFats + nutrition.fat);
+          setPredictedFood(result['Predicted Food']); 
+  
+          // Add to logs
+          setLogs([...logs, {
+            imageUri: imgUri,
+            predictedFood: result['Predicted Food'],
+            calories: nutrition.calories,
+            carbs: nutrition.carbs,
+            protein: nutrition.protein,
+            fats: nutrition.fat
+          }]);
+        } else {
+          console.error('Error: Could not retrieve nutrition information.');
+          Alert.alert('Error', 'Could not retrieve nutrition information.');
+        }
       } else {
-        console.error('Error: Could not retrieve nutrition information.');
-        Alert.alert('Error', 'Could not retrieve nutrition information.');
+        Alert.alert('Error', 'Failed to fetch data from all servers.');
       }
     } catch (error) {
       console.error('Error during inference: ', error);
@@ -148,6 +170,7 @@ const ScanScreen = () => {
       setLoading(false);
     }
   };
+  
 
   
   // Navigation to MealLogScreen
