@@ -110,6 +110,7 @@ const ScanScreen = () => {
       });
       
       const urls = [
+        'http://192.168.47.119:5000/infer', 
         'http://192.168.0.5:5000/infer',
         'http://172.18.74.133:5000/infer'
       ];
